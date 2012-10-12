@@ -32,7 +32,7 @@ public class BitMap {
 	
 	private void validate(int pos) {
 		if (pos < 0 || pos >= this.SIZE) {
-			throw new IllegalArgumentException();
+			throw new ArrayIndexOutOfBoundsException();
 		}
 	}
 	
@@ -49,6 +49,7 @@ public class BitMap {
 	}
 	
 	public boolean isSet(int pos) {
+		validate(pos);
 		return (this.bitMap[pos / this.SIZE] & (this.BIT << pos % this.SIZE)) != this.ZERO;
 	}
 	
