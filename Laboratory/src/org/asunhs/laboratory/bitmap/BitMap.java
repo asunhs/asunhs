@@ -76,16 +76,13 @@ public class BitMap {
 	
 	
 
-	private String getBinaryString(int index) {
-		String binaryString = StringUtil.leftPad(Integer.toBinaryString(this.bitMap[index]),Byte.SIZE,"0");
-		return binaryString.substring(binaryString.length() - Byte.SIZE);
-	}
-	
 	public String toBinaryString() {
 		StringBuffer sb = new StringBuffer(this.length + this.size);
 
+		String binaryString;
 		for (int index = 0; index < this.size; ++index) {
-			sb.append(" ").append(getBinaryString(index));
+			binaryString = StringUtil.leftPad(Integer.toBinaryString(this.bitMap[index]),Byte.SIZE,"0");
+			sb.append(" ").append(binaryString.substring(binaryString.length() - Byte.SIZE));
 		}
 		
 		return sb.length() > 0 ? sb.toString().substring(1) : "";
