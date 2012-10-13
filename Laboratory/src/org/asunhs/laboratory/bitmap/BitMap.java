@@ -92,9 +92,19 @@ public class BitMap {
 	public boolean equals(BitMap arg) {
 		if (length != arg.length) return false;
 
-		// TODO
-		
-		return false;
+		for (int index = size; index-- != 0;) {
+			if (bitmap[index] != arg.bitmap[index]) return false;
+		}
+		return true;
+	}
+	
+	public boolean equals(byte[] arg) {
+		if (size != arg.length) return false;
+
+		for (int index = size; index-- != 0;) {
+			if (bitmap[index] != arg[index]) return false;
+		}
+		return true;
 	}
 	
 	
