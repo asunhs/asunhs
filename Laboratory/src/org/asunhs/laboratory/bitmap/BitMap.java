@@ -6,32 +6,51 @@ import freemarker.template.utility.StringUtil;
 
 public class BitMap {
 	
-	private final byte BIT = 1;
-	private final byte ZERO = 0;
+	public final byte BIT = 1;
+	public final byte ZERO = 0;
+	
 	private final byte MASK = -1;
 	
-	private final int SIZE = 128;
-	private final int length = ((this.SIZE - 1) / Byte.SIZE) + 1;
+	/**
+	 *  length : number of total bit
+	 */
+	public final int length;
+	
+	/**
+	 *  size   : length of byte array
+	 */
+	public final int size;
 	
 	private byte[] bitMap;
 	
 	public BitMap() {
-		this.bitMap = new byte[this.length];
+		this.length = 128;
+		this.size = ((this.length - 1) / Byte.SIZE) + 1;
+		this.bitMap = new byte[this.size];
+		initMap();
+	}
+	
+	public BitMap(int size) {
+		this.length = size;
+		this.size = ((this.length - 1) / Byte.SIZE) + 1;
+		this.bitMap = new byte[this.size];
 		initMap();
 	}
 	
 	public BitMap(byte[] bitMap) {
-		this.bitMap = Arrays.copyOfRange(bitMap, 0, this.length);
+		this.length = bitMap.length * Byte.SIZE;
+		this.size = bitMap.length;
+		this.bitMap = Arrays.copyOfRange(bitMap, 0, this.size);
 	}
 		
 	private void initMap() {
-		for (int index = this.length; index-- != 0;) {
+		for (int index = this.size; index-- != 0;) {
 			this.bitMap[index] = (byte) 0x00;
 		}
 	}
 	
 	private void validate(int pos) {
-		if (pos < 0 || pos >= this.SIZE) {
+		if (pos < 0 || pos >= this.length) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
 	}
@@ -40,17 +59,17 @@ public class BitMap {
 	
 	public void set(int pos) {
 		validate(pos);
-		this.bitMap[pos / this.SIZE] |= this.BIT << pos % this.SIZE;
+		this.bitMap[pos / this.length] |= this.BIT << pos % this.length;
 	}
 	
 	public void reset(int pos) {
 		validate(pos);
-		this.bitMap[pos / this.SIZE] &= (this.BIT << pos % this.SIZE) ^ this.MASK;
+		this.bitMap[pos / this.length] &= (this.BIT << pos % this.length) ^ this.MASK;
 	}
 	
 	public boolean isSet(int pos) {
 		validate(pos);
-		return (this.bitMap[pos / this.SIZE] & (this.BIT << pos % this.SIZE)) != this.ZERO;
+		return (this.bitMap[pos / this.length] & (this.BIT << pos % this.length)) != this.ZERO;
 	}
 	
 	public byte get(int pos) {
@@ -70,9 +89,9 @@ public class BitMap {
 	}
 	
 	public String toBinaryString() {
-		StringBuffer sb = new StringBuffer(this.SIZE + this.bitMap.length);
+		StringBuffer sb = new StringBuffer(this.length + this.size);
 
-		for (int index = 0; index < bitMap.length; ++index) {
+		for (int index = 0; index < this.size; ++index) {
 			sb.append(" ").append(getBinaryString(index));
 		}
 		
@@ -80,9 +99,9 @@ public class BitMap {
 	}
 	
 	public String toString() {
-		StringBuffer sb = new StringBuffer((Byte.SIZE + 1) * this.bitMap.length);
+		StringBuffer sb = new StringBuffer((Byte.SIZE + 1) * this.size);
 
-		for (int index = 0; index < bitMap.length; ++index) {
+		for (int index = 0; index < this.size; ++index) {
 			sb.append(" ").append(String.format("%02x",this.bitMap[index]));
 		}
 
