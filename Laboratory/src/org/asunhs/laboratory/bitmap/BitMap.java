@@ -6,10 +6,10 @@ import freemarker.template.utility.StringUtil;
 
 public class BitMap {
 	
-	public final byte BIT = 1;
-	public final byte ZERO = 0;
+	public final byte BIT = (byte) 0x01;
+	public final byte ZERO = (byte) 0x00;
 	
-	private final byte MASK = -1;
+	private final byte MASK = (byte) 0xff;
 	
 	/**
 	 *  length : number of total bit
