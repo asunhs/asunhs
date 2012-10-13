@@ -49,7 +49,7 @@ public class BitMap {
 	}
 	
 	private int getindex(int pos){ return pos / Byte.SIZE; }
-	private int getpos(int pos)  { return BIT << ((Byte.SIZE - pos - 1) % Byte.SIZE); }
+	private int getpos(int pos)  { return BIT << (Byte.SIZE - (pos % Byte.SIZE) - 1); }
 	
 	
 	
