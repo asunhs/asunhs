@@ -23,13 +23,6 @@ public class BitMap {
 	
 	private byte[] bitMap;
 	
-	public BitMap() {
-		this.length = 128;
-		this.size = ((this.length - 1) / Byte.SIZE) + 1;
-		this.bitMap = new byte[this.size];
-		initMap();
-	}
-	
 	public BitMap(int size) {
 		this.length = size;
 		this.size = ((this.length - 1) / Byte.SIZE) + 1;
