@@ -49,14 +49,14 @@ public class BitMap {
 	}
 	
 	private int getindex(int pos){ return pos / Byte.SIZE; }
-	private int getpos(int pos)  { return BIT << (Byte.SIZE - pos % Byte.SIZE); }
+	private int getpos(int pos)  { return BIT << ((Byte.SIZE - pos - 1) % Byte.SIZE); }
 	
 	
 	
 	
 	/**
 	 * set bit
-	 * @param pos  one-based position
+	 * @param pos  zero-based position
 	 */
 	public void set(int pos) {
 		validate(pos);
@@ -65,7 +65,7 @@ public class BitMap {
 	
 	/**
 	 * reset bit
-	 * @param pos  one-based position
+	 * @param pos  zero-based position
 	 */
 	public void reset(int pos) {
 		validate(pos);
@@ -74,7 +74,7 @@ public class BitMap {
 	
 	/**
 	 * if set, return true.
-	 * @param pos  one-based position
+	 * @param pos  zero-based position
 	 */
 	public boolean isSet(int pos) {
 		validate(pos);
@@ -83,7 +83,7 @@ public class BitMap {
 	
 	/**
 	 * return bit.
-	 * @param pos  one-based position
+	 * @param pos  zero-based position
 	 */
 	public byte get(int pos) {
 		return isSet(pos) ? BIT : ZERO;
