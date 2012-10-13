@@ -23,8 +23,8 @@ public class BitMap {
 	
 	private byte[] bitMap;
 	
-	public BitMap(int size) {
-		this.length = size;
+	public BitMap(int length) {
+		this.length = length;
 		this.size = ((this.length - 1) / Byte.SIZE) + 1;
 		this.bitMap = new byte[this.size];
 		initMap();
