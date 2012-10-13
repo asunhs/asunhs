@@ -21,55 +21,81 @@ public class BitMap {
 	 */
 	public final int size;
 	
-	private byte[] bitMap;
+	private byte[] bitmap;
 	
 	public BitMap(int length) {
 		this.length = length;
 		this.size = ((this.length - 1) / Byte.SIZE) + 1;
-		this.bitMap = new byte[this.size];
+		this.bitmap = new byte[this.size];
 		initMap();
 	}
 	
-	public BitMap(byte[] bitMap) {
-		this.length = bitMap.length * Byte.SIZE;
-		this.size = bitMap.length;
-		this.bitMap = Arrays.copyOfRange(bitMap, 0, this.size);
+	public BitMap(byte[] bitmap) {
+		this.length = bitmap.length * Byte.SIZE;
+		this.size = bitmap.length;
+		this.bitmap = Arrays.copyOfRange(bitmap, 0, this.size);
 	}
 		
 	private void initMap() {
-		for (int index = this.size; index-- != 0;) {
-			this.bitMap[index] = (byte) 0x00;
+		for (int index = size; index-- != 0;) {
+			this.bitmap[index] = (byte) 0x00;
 		}
 	}
 	
 	private void validate(int pos) {
-		if (pos < 0 || pos >= this.length) {
+		if (pos < 0 || pos >= length) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
 	}
 	
+	private int getindex(int pos){ return pos / Byte.SIZE; }
+	private int getpos(int pos)  { return BIT << (Byte.SIZE - pos % Byte.SIZE); }
 	
 	
+	
+	
+	/**
+	 * set bit
+	 * @param pos  one-based position
+	 */
 	public void set(int pos) {
 		validate(pos);
-		this.bitMap[pos / this.length] |= this.BIT << pos % this.length;
+		bitmap[getindex(pos)] |= getpos(pos);
 	}
 	
+	/**
+	 * reset bit
+	 * @param pos  one-based position
+	 */
 	public void reset(int pos) {
 		validate(pos);
-		this.bitMap[pos / this.length] &= (this.BIT << pos % this.length) ^ this.MASK;
+		bitmap[getindex(pos)] &= getpos(pos) ^ MASK;
 	}
 	
+	/**
+	 * if set, return true.
+	 * @param pos  one-based position
+	 */
 	public boolean isSet(int pos) {
 		validate(pos);
-		return (this.bitMap[pos / this.length] & (this.BIT << pos % this.length)) != this.ZERO;
+		return (bitmap[getindex(pos)] & getpos(pos)) != ZERO;
 	}
 	
+	/**
+	 * return bit.
+	 * @param pos  one-based position
+	 */
 	public byte get(int pos) {
-		return isSet(pos) ? this.BIT : this.ZERO;
+		return isSet(pos) ? BIT : ZERO;
 	}
 	
-	
+	public boolean equals(BitMap arg) {
+		if (length != arg.length) return false;
+
+		// TODO
+		
+		return false;
+	}
 	
 	
 	
@@ -77,11 +103,11 @@ public class BitMap {
 	
 
 	public String toBinaryString() {
-		StringBuffer sb = new StringBuffer(this.length + this.size);
+		StringBuffer sb = new StringBuffer(length + size);
 
 		String binaryString;
-		for (int index = 0; index < this.size; ++index) {
-			binaryString = StringUtil.leftPad(Integer.toBinaryString(this.bitMap[index]),Byte.SIZE,"0");
+		for (int index = 0; index < size; ++index) {
+			binaryString = StringUtil.leftPad(Integer.toBinaryString(bitmap[index]),Byte.SIZE,"0");
 			sb.append(" ").append(binaryString.substring(binaryString.length() - Byte.SIZE));
 		}
 		
@@ -89,10 +115,10 @@ public class BitMap {
 	}
 	
 	public String toString() {
-		StringBuffer sb = new StringBuffer((Byte.SIZE + 1) * this.size);
+		StringBuffer sb = new StringBuffer((Byte.SIZE + 1) * size);
 
-		for (int index = 0; index < this.size; ++index) {
-			sb.append(" ").append(String.format("%02x",this.bitMap[index]));
+		for (int index = 0; index < size; ++index) {
+			sb.append(" ").append(String.format("%02x",bitmap[index]));
 		}
 
 		return sb.length() > 0 ? sb.toString().substring(1) : "";
