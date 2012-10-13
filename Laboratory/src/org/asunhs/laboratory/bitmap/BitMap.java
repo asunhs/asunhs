@@ -70,7 +70,7 @@ public class BitMap {
 	}
 	
 	public String toBinaryString() {
-		StringBuilder sb = new StringBuilder(this.SIZE + this.bitMap.length);
+		StringBuffer sb = new StringBuffer(this.SIZE + this.bitMap.length);
 
 		for (int index = 0; index < bitMap.length; ++index) {
 			sb.append(" ").append(getBinaryString(index));
@@ -80,12 +80,12 @@ public class BitMap {
 	}
 	
 	public String toString() {
-		StringBuilder sb = new StringBuilder((Byte.SIZE + 1) * this.bitMap.length);
+		StringBuffer sb = new StringBuffer((Byte.SIZE + 1) * this.bitMap.length);
 
 		for (int index = 0; index < bitMap.length; ++index) {
-			sb.append(String.format("%02x",this.bitMap[index])).append(" ");
+			sb.append(" ").append(String.format("%02x",this.bitMap[index]));
 		}
-		
-		return sb.length() > 0 ? sb.toString().substring(0, sb.length() - 1) : sb.toString();
+
+		return sb.length() > 0 ? sb.toString().substring(1) : "";
 	}
 }
