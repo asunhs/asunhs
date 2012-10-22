@@ -11,7 +11,7 @@ public class MyClass {
 		int i = 3;
 		int j = my.pass2(i);
 		
-		
+		System.out.println(j);
 	}
 	
 	public <T> T pass(T t) {
