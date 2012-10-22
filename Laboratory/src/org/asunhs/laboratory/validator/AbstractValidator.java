@@ -45,7 +45,7 @@ public class AbstractValidator {
 	/**
 	 *  test result object
 	 */
-	public static class ValidateResult {
+	protected static class ValidateResult {
 		protected String type;
 		protected boolean valid;
 		
