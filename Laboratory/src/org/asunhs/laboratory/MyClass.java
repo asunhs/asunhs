@@ -12,6 +12,7 @@ public class MyClass {
 		int j = my.pass2(i);
 		
 		System.out.println(j);
+		System.out.println(j);
 	}
 	
 	public <T> T pass(T t) {
