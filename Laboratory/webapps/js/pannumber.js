@@ -16,7 +16,7 @@ function PanNumber(id, type) {
 		return input;
 	}
 	
-	var _getKeyDownFunc = function(index, input) {
+	var _getKeyDownFunc = function(index, input, values) {
 		return function(e) {
 			if(e.preventDefault){
 		        e.preventDefault(); //FF
@@ -41,7 +41,7 @@ function PanNumber(id, type) {
 		};
 	}
 	
-	var _initNonBlockType = function(div, input) {
+	var _initNonBlockType = function(div, input, values) {
 		while (div.hasChildNodes()) {
 			div.removeChild(div.firstChild);
 		}
@@ -60,7 +60,7 @@ function PanNumber(id, type) {
 		div.appendChild(input[3]);
 	}
 
-	var _init = function(div, input, type) {
+	var _init = function(div, input, values, type) {
 		if (type === "nonblock") {
 			_initNonBlockType(div, input);
 		}
@@ -78,6 +78,7 @@ function PanNumber(id, type) {
 		, _getInputBox()
 		, _getInputBox()
 	];
+	this.values = ["","","",""];
 	/* private */
 	
 	
