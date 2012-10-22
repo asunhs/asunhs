@@ -1,2 +1,4 @@
 /lib
 /WEB-INF
+/.classpath
+/.gitignore
