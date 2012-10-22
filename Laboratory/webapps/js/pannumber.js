@@ -49,7 +49,7 @@ function PanNumber(id, type) {
 		input[0].onkeydown = _getKeyDownFunc(0, input);
 		input[1].onkeydown = _getKeyDownFunc(1, input);
 		input[2].onkeydown = _getKeyDownFunc(2, input);
-		//input[0].onkeydown = _getKeyDownFunc(0, input);
+		input[3].onkeydown = _getKeyDownFunc(3, input);
 		
 		div.appendChild(input[0]);
 		div.appendChild(document.createTextNode("-"));
