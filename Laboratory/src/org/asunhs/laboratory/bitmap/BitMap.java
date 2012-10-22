@@ -2,9 +2,7 @@ package org.asunhs.laboratory.bitmap;
 
 import java.util.Arrays;
 
-import freemarker.template.utility.StringUtil;
-
-public class BitMap {
+public class BitMap implements Comparable<BitMap> {
 	
 	public final byte BIT = (byte) 0x01;
 	public final byte ZERO = (byte) 0x00;
@@ -40,6 +38,15 @@ public class BitMap {
 		for (int index = size; index-- != 0;) {
 			this.bitmap[index] = (byte) 0x00;
 		}
+	}
+	
+	private String leftPad(String str, int size, String pad) {
+		String target = str;
+		for (int i = size; i > str.length(); --i) {
+			target += pad + target;
+		}
+		
+		return target;
 	}
 	
 	private void validate(int pos) {
@@ -106,7 +113,31 @@ public class BitMap {
 		}
 		return true;
 	}
-	
+
+	public int compareTo(BitMap arg) {
+		if (length < arg.length) {
+			System.out.println(toString() + "\n" + arg + "\nreturn(length) : " + -1);
+			return -1;
+		}
+		else if (length > arg.length) {
+			System.out.println(toString() + "\n" + arg + "\nreturn(length) : " + 1);
+			return 1;
+		}
+
+		for (int index = size; index-- != 0;) {
+			if (bitmap[index] < arg.bitmap[index]) {
+				System.out.println(toString() + "\n" + arg + "\nreturn(contents) : " + -1);
+				return -1;
+			}
+			else if (bitmap[index] < arg.bitmap[index]) {
+				System.out.println(toString() + "\n" + arg + "\nreturn(contents) : " + 1);
+				return 1;
+			}
+		}
+
+		System.out.println(toString() + "\n" + arg + "\nreturn : " + 0);
+		return 0;
+	}
 	
 	
 	
@@ -117,7 +148,7 @@ public class BitMap {
 
 		String binaryString;
 		for (int index = 0; index < size; ++index) {
-			binaryString = StringUtil.leftPad(Integer.toBinaryString(bitmap[index]),Byte.SIZE,"0");
+			binaryString = leftPad(Integer.toBinaryString(bitmap[index]),Byte.SIZE,"0");
 			sb.append(" ").append(binaryString.substring(binaryString.length() - Byte.SIZE));
 		}
 		
@@ -133,4 +164,5 @@ public class BitMap {
 
 		return sb.length() > 0 ? sb.toString().substring(1) : "";
 	}
+
 }
