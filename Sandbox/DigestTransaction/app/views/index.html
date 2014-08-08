@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <link rel="stylesheet" href="./stylesheets/dutchpay.css" />
+    
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.js"></script>
+    <script src="./javascripts/dutchpayapp.js"></script>
+    <script src="./javascripts/ctrl/mainCtrl.js"></script>
+    <script src="./javascripts/svc/receiptsSvc.js"></script>
+    <script src="./javascripts/model/receipts.js"></script>
+</head>
+<body ng-app="DutchPayApp">
+    
+    <div ng-controller="MainCtrl">
+        
+        <h1>{{welcome}}</h1>
+        
+        <div class="container">
+                
+            <ul class="receipts">
+
+                <li ng-repeat="receipt in receipts">
+                    
+                    {{receipt.title}}
+
+                    <ul class="receipt">
+                        
+                        <li ng-repeat="transaction in receipt.transactions">
+                            from <span>{{transaction.from}}</span> to <span>{{transaction.to}}</span> : <input type="text" ng-model="transaction.amount" />
+                        </li>
+
+                    </ul>
+
+                </li>
+
+            </ul>
+            
+        </div>
+        
+    </div>
+    
+</body>
+</html>
