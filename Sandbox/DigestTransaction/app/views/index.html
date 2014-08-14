@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    
     <link rel="stylesheet" href="./stylesheets/dutchpay.css" />
     
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js"></script>
@@ -13,34 +12,35 @@
     <script src="./javascripts/model/receipts.js"></script>
 </head>
 <body ng-app="DutchPayApp">
-    
     <div ng-controller="MainCtrl">
-        
         <h1>{{welcome}}</h1>
-        
         <div class="container">
-                
             <ul class="receipts">
-
-                <li ng-repeat="receipt in receipts">
-                    
-                    {{receipt.title}}
-
-                    <ul class="receipt">
-                        
-                        <li ng-repeat="transaction in receipt.transactions">
-                            from <span>{{transaction.from}}</span> to <span>{{transaction.to}}</span> : <input type="text" ng-model="transaction.amount" />
-                        </li>
-
-                    </ul>
-
+                <li ng-click="addReceipt(receipts)">+ New Receipt</li>
+                <li ng-repeat="receipt in receipts | orderBy:'createdTimestamp':true">
+                    <div ng-if="!isWriting(receipt)">
+                        <h3>{{receipt.title}}</h3>
+                        Owner {{receipt.to}}
+                        <ul class="receipt">
+                            <li ng-repeat="transaction in receipt.transactions">
+                                {{transaction.from}} : {{transaction.amount}}
+                            </li>
+                            <li ng-if="isWriting(receipt)" ng-click="addTransaction()">+ New Row</li>
+                        </ul>
+                    </div>
+                    <div ng-if="isWriting(receipt)">
+                        <h3><input type="text" ng-model="receipt.title" /></h3><span style="float:right;" ng-click="">add</span>
+                        Owner <input type="text" ng-model="receipt.to" />
+                        <ul class="receipt">
+                            <li ng-repeat="transaction in receipt.transactions">
+                                <input type="text" ng-model="transaction.from" /> : <input type="text" ng-model="transaction.amount" />
+                            </li>
+                            <li ng-click="addTransaction(receipt)">+ New Row</li>
+                        </ul>
+                    </div>
                 </li>
-
             </ul>
-            
         </div>
-        
     </div>
-    
 </body>
 </html>
