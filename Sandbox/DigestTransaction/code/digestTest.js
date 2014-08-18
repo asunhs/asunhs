@@ -34,7 +34,7 @@ var nodes2 = _.extend({ I: -5, J: 7, K: -4, L: 2}, nodes);
 
 function print(methods) {
     methods.forEach(function (method) {
-        console.log(method.from, '->', method.to, method.amount);
+        console.log(method.to, '->', method.from, method.amount);
     });
 }
 
@@ -61,3 +61,40 @@ console.time("Find Zero Sum : 4 members");
 var result2 = DigestTransaction.getMethods(DigestTransaction.summarize(vector));
 console.timeEnd("Find Zero Sum : 4 members");
 print(result2);
+
+
+
+
+
+var coffee = [
+    { from : 'Oh'  , to : 'Jeun', amount : 1 },
+    { from : 'Oh'  , to : 'Yaeh', amount : 1 },
+    { from : 'Oh'  , to : 'Kwon', amount : 1 },
+    { from : 'Kwon', to : 'Choi', amount : 1 },
+    { from : 'Kwon', to : 'Jeun', amount : 1 },
+    { from : 'Kwon', to : 'Sun' , amount : 1 },
+    { from : 'Joo' , to : 'Jeun', amount : 1 },
+    { from : 'Joo' , to : 'Kwon', amount : 1 },
+    { from : 'Jeun', to : 'Oh'  , amount : 1 },
+    { from : 'Jeun', to : 'Kwon', amount : 1 },
+    { from : 'Jeun', to : 'Koo' , amount : 1 },
+    { from : 'Jeun', to : 'Yaeh', amount : 1 },
+    { from : 'Jeun', to : 'Sun' , amount : 1 },
+    { from : 'Jeun', to : 'Choi', amount : 1 },
+    { from : 'Choi', to : 'Jeun', amount : 1 },
+    { from : 'Yoon', to : 'Yaeh', amount : 1 },
+    { from : 'Yoon', to : 'Jeun', amount : 1 },
+    { from : 'Yoon', to : 'Choi', amount : 1 },
+    { from : 'Yoon', to : 'Kwon', amount : 1 },
+    { from : 'Yoon', to : 'Sun' , amount : 1 },
+    { from : 'Sun' , to : 'Jeun', amount : 1 },
+    { from : 'Sun' , to : 'Kwon', amount : 1 },
+    { from : 'Song', to : 'Yaeh', amount : 1 },
+    { from : 'Song', to : 'Joo' , amount : 1 },
+];
+
+    
+
+console.group('1');
+print(DigestTransaction.getMethods(DigestTransaction.summarize(coffee)));
+console.groupEnd('1');
