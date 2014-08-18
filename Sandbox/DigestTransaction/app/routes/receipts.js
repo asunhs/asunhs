@@ -1,49 +1,16 @@
 var express = require('express');
 var router = express.Router();
 var _ = require('underscore');
+var receiptsDB = require('../dbs/receipts');
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-    res.send([
-        {
-            to : 'A',
-            receiptId : 2,
-            title : 'Korean Food',
-            transactions : [
-                {
-                    from : 'B',
-                    amount : 4000
-                },
-                {
-                    from : 'C',
-                    amount : 3000
-                }
-            ],
-            createdTimestamp : 1407493380394,
-            status : 'writing'
-        },
-        {
-            to : 'B',
-            receiptId : 1,
-            title : 'Italian Food',
-            transactions : [
-                {
-                    from : 'A',
-                    amount : 2000
-                },
-                {
-                    from : 'C',
-                    amount : 3000
-                }
-            ],
-            createdTimestamp : 1407493423802,
-            status : 'yet'
-        }
-    ]);
+    res.send(receiptsDB.find());
 });
 
 router.post('/update', function(req, res) {
-    res.send(_.chain(req.body).map(function (receipt) {
+    
+    res.send(receiptsDB.save(_.chain(req.body).map(function (receipt) {
         
         if (!receipt.temporary) {
             return null;
@@ -53,7 +20,9 @@ router.post('/update', function(req, res) {
         
         return receipt;
         
-    }).compact().value());
+    }).compact().value(), function (err, receipt) {
+        return receipt;
+    }));
 });
 
 module.exports = router;
