@@ -29,7 +29,7 @@ fs.readdirSync(modelsPath).forEach(function (file) {
 });
 
 
-// models
+// routes
 var routesPath = path.join(__dirname, '/routes');
 fs.readdirSync(routesPath).forEach(function (file) {
     var matched = file.match(/(.*)\.(js$)/);

@@ -2,13 +2,12 @@ var express = require('express');
 var router = express.Router();
 var _ = require('underscore');
 var async = require('async');
-var countersDB = require('../dbs/counters');
-var receiptsDB = require('../dbs/receipts');
+var db = require('../dbs');
 
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-    receiptsDB.find(null, function (err, receipts) {
+    db.receipts.find(null, function (err, receipts) {
         if (!!err) {
             return res.send(err);
         }
@@ -29,7 +28,7 @@ router.post('/update', function(req, res) {
             }
             
             if (!receipt.receiptId) {
-                countersDB.seq('receiptId', function (err, counter) {
+                db.counters.seq('receiptId', function (err, counter) {
                     
                     if (!!err) {
                         return cb();
@@ -55,7 +54,7 @@ router.post('/update', function(req, res) {
         };
         
     }), function (err, results) {
-        receiptsDB.save(_.compact(results), function (err, receipts) {
+        db.receipts.save(_.compact(results), function (err, receipts) {
             res.send(receipts);
         });
     });
