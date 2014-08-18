@@ -14,8 +14,7 @@
         
         this.newReceipt = function (receipt) {
             return _.extend({
-                status : 'writing',
-                temporary : uuid()
+                status : 'writing'
             }, receipt);
             
         };
@@ -24,7 +23,7 @@
             
             if (condition.temporary) {
                 return _.find(Receipts, function (receipt) {
-                    return receipt.temporary == condition.temporary;
+                    return receipt.temporary === condition.temporary;
                 });
             }
             
@@ -53,48 +52,21 @@
             _.each(newReceipts, svc.addReceipt);
         };
         
-        this.pushReceipts = function (receipts) {
+        this.pushReceipts = function (modifiedReceipts) {
+            
+            $http.post('/receipts/update', _.map(modifiedReceipts, function (modifiedReceipt) {
+                modifiedReceipt.temporary = uuid();
+                return modifiedReceipt;
+            })).success(function (receipts) {
+                svc.addReceipts(receipts);
+            });
             
         };
         
         this.pullReceipts = function () {
-            
-            svc.addReceipts([
-                {
-                    to : 'A',
-                    receiptId : 2,
-                    title : 'Korean Food',
-                    transactions : [
-                        {
-                            from : 'B',
-                            amount : 4000
-                        },
-                        {
-                            from : 'C',
-                            amount : 3000
-                        }
-                    ],
-                    createdTimestamp : 1407493380394,
-                    status : 'writing'
-                },
-                {
-                    to : 'B',
-                    receiptId : 1,
-                    title : 'Italian Food',
-                    transactions : [
-                        {
-                            from : 'A',
-                            amount : 2000
-                        },
-                        {
-                            from : 'C',
-                            amount : 3000
-                        }
-                    ],
-                    createdTimestamp : 1407493423802,
-                    status : 'yet'
-                }
-            ]);
+            $http.get('/receipts').success(function (receipts) {
+                svc.addReceipts(receipts);
+            });
         };
     });
 }());

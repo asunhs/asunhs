@@ -34,6 +34,10 @@
             }
             
             receipts.push(ReceiptsSvc.newReceipt());
-        }
+        };
+        
+        $scope.modifyReceipts = function (receipts) {
+            ReceiptsSvc.pushReceipts(receipts);
+        };
     });
 }());

@@ -29,11 +29,11 @@
                         </ul>
                     </div>
                     <div ng-if="isWriting(receipt)">
-                        <h3><input type="text" ng-model="receipt.title" /></h3><span style="float:right;" ng-click="">add</span>
+                        <h3><input type="text" ng-model="receipt.title" /></h3><span style="float:right;" ng-click="modifyReceipts([receipt])">add</span>
                         Owner <input type="text" ng-model="receipt.to" />
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">
-                                <input type="text" ng-model="transaction.from" /> : <input type="text" ng-model="transaction.amount" />
+                                <input type="text" ng-model="transaction.from" /> : <input type="number" ng-model="transaction.amount" />
                             </li>
                             <li ng-click="addTransaction(receipt)">+ New Row</li>
                         </ul>
