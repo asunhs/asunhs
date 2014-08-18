@@ -1,6 +1,8 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
+    
 
-module.exports = mongoose.model('Receipt', {
+var ReceiptSchema = new Schema({
     to : String,
     receiptId : Number,
     title : String,
@@ -11,3 +13,6 @@ module.exports = mongoose.model('Receipt', {
     createdTimestamp : Number,
     status : String
 });
+
+
+mongoose.model('Receipt', ReceiptSchema);
