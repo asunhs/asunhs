@@ -36,61 +36,63 @@
             return;
         };
         
-        this.addReceipt = function (newReceipt) {
+        this.adjustReceipt = function (receipt) {
             
-            var existed = svc.getReceipt(newReceipt);
+            var existed = svc.getReceipt(receipt);
             
-            if (!existed && !newReceipt.receiptId) {
+            delete receipt.temporary;
+            
+            if (!existed && !receipt.receiptId) {
                 return;
             }
             
             if (!existed) {
                 // Create
-                Receipts.push(newReceipt);
+                Receipts.push(receipt);
                 return;
             }
             
-            if (!newReceipt.receiptId) {
+            delete existed.temporary;
+            
+            if (!receipt.receiptId) {
                 // Delete
                 Receipts.splice(Receipts.indexOf(existed), 1);
                 return;
             }
             
             // Update
-            _.extend(existed, newReceipt);
+            _.extend(existed, receipt);
             
         };
         
-        this.addReceipts = function (newReceipts) {
-            _.each(newReceipts, svc.addReceipt);
+        
+        this.adjustReceipts = function (receipts) {
+            _.each(receipts, svc.adjustReceipt);
         };
+        
         
         this.saveReceipts = function (receipts) {
             
             $http.post('/receipts/save', _.map(receipts, function (receipt) {
                 receipt.temporary = uuid();
                 return receipt;
-            })).success(function (results) {
-                svc.addReceipts(results);
-            });
+            })).success(svc.adjustReceipts);
             
         };
+        
         
         this.removeReceipts = function (receipts) {
             
             $http.post('/receipts/remove', _.map(receipts, function (receipt) {
                 receipt.temporary = uuid();
                 return receipt;
-            })).success(function (results) {
-                svc.addReceipts(results);
-            });
+            })).success(svc.adjustReceipts);
             
         };
         
+        
         this.pullReceipts = function () {
-            $http.get('/receipts').success(function (receipts) {
-                svc.addReceipts(receipts);
-            });
+            $http.get('/receipts').success(svc.adjustReceipts);
         };
     });
 }());

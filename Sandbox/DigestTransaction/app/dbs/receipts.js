@@ -18,28 +18,8 @@ module.exports.find = function (conditions, cb) {
     
 };
 
-/*
-module.exports.save = function (receipts, callback) {
-    
-    var results = [];
-    
-    async.each(receipts, function (receipt, cb) {
-        new Receipt(receipt).save(function (err) {
-            if (!!err) {
-                return cb(err);
-            }
 
-            results.push(receipt);
-            return cb();
-        });
-    }, function (err) {
-        callback(err, results);
-    });
-    
-};
-*/
-
-function save (receipt, cb) {
+function insert (receipt, cb) {
     
     return db.counters.seq('receiptId', function (err, counter) {
 
@@ -69,7 +49,7 @@ module.exports.save = function (receipts, callback) {
         if (!receipt.receiptId) {
             // Do create
             receipt.createdTimestamp = Date.now();
-            save(receipt, cb);
+            insert(receipt, cb);
         } else {
             // Do update
             receipt.modifiedTimestamp = Date.now();
