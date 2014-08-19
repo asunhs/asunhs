@@ -18,42 +18,45 @@ router.get('/', function(req, res) {
 
 router.post('/update', function(req, res) {
     
+    var receipts = req.body,
+        results = [];
     
-    async.parallel(_.map(req.body, function (receipt) {
+    async.each(receipts, function (receipt, cb) {
         
-        return function (cb) {
-            
-            if (!receipt.temporary) {
-                return cb();
-            }
-            
-            if (!receipt.receiptId) {
-                db.counters.seq('receiptId', function (err, counter) {
-                    
-                    if (!!err) {
-                        return cb();
-                    }
-                    
-                    receipt.receiptId = counter.seq;
-                    
-                    receipt.status = 'yet';
-                    
-                    receipt.transactions = _.filter(receipt.transactions, function (transaction) {
-                        return !_.isEmpty(transaction);
-                    });
+        if (!receipt.temporary) {
+            return cb('not valid');
+        }
 
-                    if (!!receipt.createdTimestamp) {
-                        receipt.modifiedTimestamp = Date.now();
-                    } else {
-                        receipt.createdTimestamp = Date.now();
-                    }
-                    
-                    return cb(null, receipt);
+        if (!receipt.receiptId) {
+            
+            db.counters.seq('receiptId', function (err, counter) {
+
+                if (!!err) {
+                    return cb(err);
+                }
+
+                receipt.receiptId = counter.seq;
+
+                receipt.status = 'yet';
+
+                receipt.transactions = _.filter(receipt.transactions, function (transaction) {
+                    return !_.isEmpty(transaction);
                 });
-            }
-        };
+
+                if (!!receipt.createdTimestamp) {
+                    receipt.modifiedTimestamp = Date.now();
+                } else {
+                    receipt.createdTimestamp = Date.now();
+                }
+                
+                results.push(receipt);
+
+                return cb();
+            });
+            
+        }
         
-    }), function (err, results) {
+    }, function (err) {
         db.receipts.save(_.compact(results), function (err, receipts) {
             res.send(receipts);
         });

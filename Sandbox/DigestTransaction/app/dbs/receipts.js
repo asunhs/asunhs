@@ -18,18 +18,20 @@ module.exports.find = function (conditions, cb) {
 
 module.exports.save = function (receipts, callback) {
     
-    async.parallel(_.map(receipts, function (receipt) {
-        
-        return function (cb) {
-            new Receipt(receipt).save(function (err) {
-                if (!!err) {
-                    return cb(err);
-                }
-                
-                return cb(null, receipt);
-            });
-        };
-        
-    }), callback);
+    
+    var results = [];
+    
+    async.each(receipts, function (receipt, cb) {
+        new Receipt(receipt).save(function (err) {
+            if (!!err) {
+                return cb(err);
+            }
+
+            results.push(receipt);
+            return cb();
+        });
+    }, function (err) {
+        callback(err, results);
+    });
     
 };
