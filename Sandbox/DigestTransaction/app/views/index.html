@@ -19,7 +19,7 @@
                 <li ng-click="addReceipt(receipts)">+ New Receipt</li>
                 <li ng-repeat="receipt in receipts | orderBy:'createdTimestamp':true">
                     <div ng-if="!isWriting(receipt)">
-                        <h3>{{receipt.title}}</h3>
+                        <h3>{{receipt.title}}</h3><span style="float:right;" ng-click="removeReceipts([receipt])">remove</span>
                         Owner {{receipt.to}}
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">
@@ -29,7 +29,7 @@
                         </ul>
                     </div>
                     <div ng-if="isWriting(receipt)">
-                        <h3><input type="text" ng-model="receipt.title" /></h3><span style="float:right;" ng-click="modifyReceipts([receipt])">add</span>
+                        <h3><input type="text" ng-model="receipt.title" /></h3><span style="float:right;" ng-click="saveReceipts([receipt])">save</span>
                         Owner <input type="text" ng-model="receipt.to" />
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">

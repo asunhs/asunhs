@@ -36,8 +36,8 @@
             receipts.push(ReceiptsSvc.newReceipt());
         };
         
-        $scope.modifyReceipts = function (receipts) {
-            ReceiptsSvc.pushReceipts(receipts);
-        };
+        $scope.saveReceipts = ReceiptsSvc.saveReceipts;
+        
+        $scope.removeReceipts = ReceiptsSvc.removeReceipts;
     });
 }());

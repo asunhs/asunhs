@@ -16,52 +16,36 @@ router.get('/', function(req, res) {
     });
 });
 
-router.post('/update', function(req, res) {
+router.post('/save', function (req, res) {
     
-    var receipts = req.body,
-        results = [];
-    
-    async.each(receipts, function (receipt, cb) {
-        
-        if (!receipt.temporary) {
-            return cb('not valid');
-        }
-
-        if (!receipt.receiptId) {
-            
-            db.counters.seq('receiptId', function (err, counter) {
-
-                if (!!err) {
-                    return cb(err);
-                }
-
-                receipt.receiptId = counter.seq;
-
-                receipt.status = 'yet';
-
-                receipt.transactions = _.filter(receipt.transactions, function (transaction) {
+    var receipts = _.chain(req.body).filter(function (receipt) {
+            return !!receipt.temporary;
+        }).map(function (receipt) {
+            return _.extend(receipt, { 
+                status : 'yet',
+                transactions : _.filter(receipt.transactions, function (transaction) {
                     return !_.isEmpty(transaction);
-                });
-
-                if (!!receipt.createdTimestamp) {
-                    receipt.modifiedTimestamp = Date.now();
-                } else {
-                    receipt.createdTimestamp = Date.now();
-                }
-                
-                results.push(receipt);
-
-                return cb();
+                })
             });
-            
-        }
-        
-    }, function (err) {
-        db.receipts.save(_.compact(results), function (err, receipts) {
-            res.send(receipts);
-        });
+        }).value();
+    
+    db.receipts.save(receipts, function (err, receipts) {
+        res.send(receipts);
     });
     
+});
+
+router.post('/remove', function (req, res) {
+    
+    var receipts = _.filter(req.body, function (receipt) {
+        return !!receipt.temporary && !! receipt.receiptId;
+    });
+    
+    db.receipts.remove(receipts, function (err, receipts) {
+        res.send(_.map(receipts, function (receipt) {
+            return _.pick(receipt, 'temporary');
+        }));
+    });
 });
 
 module.exports = router;

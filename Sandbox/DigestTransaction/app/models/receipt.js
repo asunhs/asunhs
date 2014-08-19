@@ -11,6 +11,8 @@ var ReceiptSchema = new Schema({
         amount : Number
     }],
     createdTimestamp : Number,
+    modifiedTimestamp : Number,
+    removedTimestamp : Number,
     status : String
 });
 

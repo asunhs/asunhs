@@ -33,18 +33,31 @@
                 });
             }
             
-            return {};
+            return;
         };
         
         this.addReceipt = function (newReceipt) {
             
             var existed = svc.getReceipt(newReceipt);
             
-            if (!!existed) {
-                Receipts[_.indexOf(Receipts, existed)] = newReceipt;
-            } else {
-                Receipts.push(newReceipt);
+            if (!existed && !newReceipt.receiptId) {
+                return;
             }
+            
+            if (!existed) {
+                // Create
+                Receipts.push(newReceipt);
+                return;
+            }
+            
+            if (!newReceipt.receiptId) {
+                // Delete
+                Receipts.splice(Receipts.indexOf(existed), 1);
+                return;
+            }
+            
+            // Update
+            _.extend(existed, newReceipt);
             
         };
         
@@ -52,13 +65,24 @@
             _.each(newReceipts, svc.addReceipt);
         };
         
-        this.pushReceipts = function (modifiedReceipts) {
+        this.saveReceipts = function (receipts) {
             
-            $http.post('/receipts/update', _.map(modifiedReceipts, function (modifiedReceipt) {
-                modifiedReceipt.temporary = uuid();
-                return modifiedReceipt;
-            })).success(function (receipts) {
-                svc.addReceipts(receipts);
+            $http.post('/receipts/save', _.map(receipts, function (receipt) {
+                receipt.temporary = uuid();
+                return receipt;
+            })).success(function (results) {
+                svc.addReceipts(results);
+            });
+            
+        };
+        
+        this.removeReceipts = function (receipts) {
+            
+            $http.post('/receipts/remove', _.map(receipts, function (receipt) {
+                receipt.temporary = uuid();
+                return receipt;
+            })).success(function (results) {
+                svc.addReceipts(results);
             });
             
         };
