@@ -3,6 +3,7 @@ var router = express.Router();
 var _ = require('underscore');
 var async = require('async');
 var db = require('../dbs');
+var digest = require('../services/digest');
 
 
 /* GET users listing. */
@@ -56,8 +57,31 @@ router.post('/digest', function (req, res) {
         return receipt._id;
     }).value();
     
-    db.receipts.findByIds(receiptIds, function (err, receipts) {
-        res.send(receipts);
+    async.waterfall([
+        function (cb) {
+            db.receipts.findByIds(receiptIds, cb);
+        },
+        function (receipts, cb) {
+            cb(null, {
+                receipts : _.map(receipts, function (receipt) {
+                    return receipt._id;
+                }),
+                transactions : digest.getMethods(digest.summarize(_.chain(receipts).map(function (receipt) {
+                    return _.map(receipt.transactions, function (transaction) {
+                        return {
+                            to : receipt.to,
+                            from : transaction.from,
+                            amount : transaction.amount
+                        };
+                    });
+                }).flatten().value()))
+            });
+        },
+        function (digests, cb) {
+            db.digests.save([digests], cb);
+        }
+    ], function (err, results) {
+        res.send(results);
     });
     
 });

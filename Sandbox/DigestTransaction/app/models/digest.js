@@ -2,19 +2,18 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
     
 
-var ReceiptSchema = new Schema({
-    to : String,
-    title : String,
+var DigestSchema = new Schema({
+    receipts: [Schema.ObjectId],
     transactions : [{
+        to : String,
         from : String,
         amount : Number
     }],
     createdTimestamp : Number,
     modifiedTimestamp : Number,
     removedTimestamp : Number,
-    digestId : Schema.ObjectId,
     status : String
 });
 
 
-mongoose.model('Receipt', ReceiptSchema);
+mongoose.model('Digest', DigestSchema);
