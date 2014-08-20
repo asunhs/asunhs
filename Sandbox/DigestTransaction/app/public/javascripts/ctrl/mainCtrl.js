@@ -14,6 +14,40 @@
         
         $scope.receipts = Receipts;
         
+        $scope.modes = DigestSvc.modes;
+        
+        $scope.getMode = DigestSvc.getMode;
+        
+        $scope.digest = DigestSvc.digest;
+        
+        $scope.saveReceipts = ReceiptsSvc.saveReceipts;
+        
+        $scope.removeReceipts = ReceiptsSvc.removeReceipts;
+        
+        
+        
+        
+        $scope.addReceipt = function (receipts) {
+            
+            if (!receipts) {
+                return;
+            }
+            
+            receipts.push(ReceiptsSvc.newReceipt());
+        };
+        
+        $scope.toggleDigestMode = function () {
+            DigestSvc.toggle();
+        };
+        
+        $scope.confirmMode = function (mode) {
+            return DigestSvc.getMode() === mode;
+        };
+        
+        
+        
+        
+        
         $scope.addTransaction = function (receipt) {
             
             if (!isWriting(receipt)) {
@@ -27,10 +61,6 @@
             receipt.transactions.push({});
         };
         
-        $scope.addable = function () {
-            return DigestSvc.getMode() === DigestSvc.BOOK;
-        };
-        
         $scope.addReceipt = function (receipts) {
             
             if (!receipts) {
@@ -38,14 +68,6 @@
             }
             
             receipts.push(ReceiptsSvc.newReceipt());
-        };
-        
-        $scope.saveReceipts = ReceiptsSvc.saveReceipts;
-        
-        $scope.removeReceipts = ReceiptsSvc.removeReceipts;
-        
-        $scope.toggleDigestMode = function () {
-            DigestSvc.toggle();
         };
     });
 }());

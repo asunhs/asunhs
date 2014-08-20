@@ -12,7 +12,7 @@
                 
                 element.on('click', function () {
                     
-                    if (DigestSvc.getMode() != DigestSvc.DIGEST) {
+                    if (DigestSvc.getMode() != DigestSvc.modes.DIGEST) {
                         return;
                     }
                     

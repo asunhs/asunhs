@@ -19,6 +19,17 @@ module.exports.find = function (conditions, cb) {
 };
 
 
+module.exports.findByIds = function (ids, cb) {
+    return Receipt.find({ '_id': { $in: ids }}, function(err, receipts) {
+        if (!!err) {
+            return cb(err, null);
+        }
+        
+        return cb(null, receipts);
+    });
+};
+
+
 
 module.exports.save = function (receipts, callback) {
     

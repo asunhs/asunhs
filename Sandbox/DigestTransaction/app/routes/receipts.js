@@ -24,7 +24,7 @@ router.post('/save', function (req, res) {
             return _.extend(receipt, { 
                 status : 'yet',
                 transactions : _.filter(receipt.transactions, function (transaction) {
-                    return !_.isEmpty(transaction);
+                    return transaction.from && transaction.amount && transaction.amount > 0;
                 })
             });
         }).value();
@@ -46,6 +46,20 @@ router.post('/remove', function (req, res) {
             return _.pick(receipt, 'temporary');
         }));
     });
+});
+
+router.post('/digest', function (req, res) {
+    
+    var receiptIds = _.chain(req.body).filter(function (receipt) {
+        return !!receipt._id;
+    }).map(function (receipt) {
+        return receipt._id;
+    }).value();
+    
+    db.receipts.findByIds(receiptIds, function (err, receipts) {
+        res.send(receipts);
+    });
+    
 });
 
 module.exports = router;

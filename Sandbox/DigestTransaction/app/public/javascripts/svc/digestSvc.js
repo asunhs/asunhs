@@ -3,15 +3,17 @@
     
     
     angular.module('DutchPayApp')
-    .service('DigestSvc', function (Receipts) {
+    .service('DigestSvc', function ($http, Receipts) {
         
         var svc = this,
-            DIGEST = 'digest',
-            BOOK = 'book',
+            DIGEST = 'Digest',
+            BOOK = 'Book',
             mode = BOOK;
         
-        this.DIGEST = DIGEST;
-        this.BOOK = BOOK;
+        this.modes = {
+            DIGEST : DIGEST,
+            BOOK : BOOK
+        };
         
         this.getMode = function () {
             return mode;
@@ -58,6 +60,15 @@
                 case BOOK: digestMode(); break;
                 default: bookMode(); break;
             }
+        };
+        
+        this.digest = function () {
+            
+            $http.post('/receipts/digest', _.filter(Receipts, function (receipt) {
+                return receipt.isSelected;
+            })).success(function (receipts) {
+                console.log(receipts);
+            });
         };
         
     });
