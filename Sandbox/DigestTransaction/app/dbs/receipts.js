@@ -75,9 +75,17 @@ module.exports.remove = function (receipts, callback) {
             // Do remove
             receipt.removedTimestamp = Date.now();
             
-            return Receipt.update({ '_id' : receipt._id }, receipt, function (err, result) {
-                results.push(receipt);
-                cb();
+            Receipt.findById(receipt._id, function (err, doc) {
+                if (!!doc.digestId) {
+                    cb(new Error('already digested'));
+                }
+                
+                doc.removedTimestamp = Date.now();
+                doc.save(function (err, doc) {
+                    doc.temporary = receipt.temporary;
+                    results.push(doc);
+                    cb();
+                });
             });
         }
         

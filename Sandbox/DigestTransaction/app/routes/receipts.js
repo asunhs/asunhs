@@ -53,11 +53,17 @@ router.post('/digest', function (req, res) {
     
     async.waterfall([
         function (cb) {
-            cb(null, _.chain(req.body).filter(function (receipt) {
+            var receiptIds = _.chain(req.body).filter(function (receipt) {
                 return !!receipt._id;
             }).map(function (receipt) {
                 return receipt._id;
-            }).value());
+            }).value();
+            
+            if (_.isEmpty(receiptIds)) {
+                return cb(new Error('non seleted'));
+            }
+            
+            cb(null, receiptIds);
         },
         function (receiptIds, cb) {
             db.receipts.findByIds(receiptIds, cb);
