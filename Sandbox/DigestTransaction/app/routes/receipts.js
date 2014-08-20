@@ -51,37 +51,67 @@ router.post('/remove', function (req, res) {
 
 router.post('/digest', function (req, res) {
     
-    var receiptIds = _.chain(req.body).filter(function (receipt) {
-        return !!receipt._id;
-    }).map(function (receipt) {
-        return receipt._id;
-    }).value();
-    
     async.waterfall([
         function (cb) {
+            cb(null, _.chain(req.body).filter(function (receipt) {
+                return !!receipt._id;
+            }).map(function (receipt) {
+                return receipt._id;
+            }).value());
+        },
+        function (receiptIds, cb) {
             db.receipts.findByIds(receiptIds, cb);
         },
         function (receipts, cb) {
-            cb(null, {
+            if (_.some(receipts, function (receipt) {
+                return receipt.digestId;
+            })) {
+                return cb(new Error('already digested'));
+            }
+            
+            cb(null, receipts);
+        },
+        function (receipts, cb) {
+            cb(null, receipts, _.chain(receipts).map(function (receipt) {
+                return _.map(receipt.transactions, function (transaction) {
+                    return {
+                        to : receipt.to,
+                        from : transaction.from,
+                        amount : transaction.amount
+                    };
+                });
+            }).flatten().value())
+        },
+        function (receipts, transactions, cb) {
+            cb(null, receipts, digest.getMethods(digest.summarize(transactions)));
+        },
+        function (receipts, transactions, cb) {
+            db.digests.save([{
                 receipts : _.map(receipts, function (receipt) {
                     return receipt._id;
                 }),
-                transactions : digest.getMethods(digest.summarize(_.chain(receipts).map(function (receipt) {
-                    return _.map(receipt.transactions, function (transaction) {
-                        return {
-                            to : receipt.to,
-                            from : transaction.from,
-                            amount : transaction.amount
-                        };
+                transactions : transactions
+            }], function (err, digests) {
+                
+                var digest = digests[0];
+                
+                async.each(receipts, function (receipt, cb) {
+                    receipt.digestId = digest._id;
+                    receipt.save(cb);
+                }, function (err) {
+                    res.send({
+                        receipts : receipts,
+                        digest : digest
                     });
-                }).flatten().value()))
+                });
             });
-        },
-        function (digests, cb) {
-            db.digests.save([digests], cb);
         }
     ], function (err, results) {
-        res.send(results);
+        if (!!err) {
+            res.send(err);
+        } else {
+            res.send(results);
+        }
     });
     
 });
