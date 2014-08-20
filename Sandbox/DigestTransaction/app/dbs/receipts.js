@@ -31,8 +31,7 @@ module.exports.save = function (receipts, callback) {
             receipt.createdTimestamp = Date.now();
             
             return new Receipt(receipt).save(function (err, result) {
-                // TODO result 로 뒤집어 써야 한다.
-                result.temporary = receipt.temporary;
+                result._doc.temporary = receipt.temporary;
                 results.push(result);
                 cb();
             });
@@ -41,7 +40,8 @@ module.exports.save = function (receipts, callback) {
             receipt.modifiedTimestamp = Date.now();
             
             return Receipt.update({ '_id' : receipt._id }, receipt, function (err, result) {
-                result.temporary = receipt.temporary;
+                // TODO 동작하지 않는 코드
+                result._doc.temporary = receipt.temporary;
                 results.push(result);
                 cb();
             });
@@ -63,8 +63,11 @@ module.exports.remove = function (receipts, callback) {
         if (!!receipt._id) {
             // Do remove
             receipt.removedTimestamp = Date.now();
-            update(receipt, cb);
-            results.push(receipt);
+            
+            return Receipt.update({ '_id' : receipt._id }, receipt, function (err, result) {
+                results.push(receipt);
+                cb();
+            });
         }
         
     }, function (err) {
