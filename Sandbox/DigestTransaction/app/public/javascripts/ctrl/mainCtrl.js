@@ -2,7 +2,7 @@
     'use strict';
     
     angular.module('DutchPayApp')
-    .controller('MainCtrl', function ($scope, DigestSvc, ReceiptsSvc, Receipts) {
+    .controller('MainCtrl', function ($scope, DigestSvc, Digests, ReceiptsSvc, Receipts) {
         
         var isWriting = $scope.isWriting = function (receipt) {
             return receipt.status === 'writing';
