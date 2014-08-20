@@ -19,19 +19,6 @@ module.exports.find = function (conditions, cb) {
 };
 
 
-function insert (receipt, cb) {
-    return new Receipt(receipt).save(function (err, result) {
-        // TODO result 로 뒤집어 써야 한다.
-        receipt._id = result._id;
-        cb();
-    });    
-}
-
-
-function update (receipt, cb) {
-    return Receipt.update({ '_id' : receipt._id }, receipt, cb);
-}
-
 
 module.exports.save = function (receipts, callback) {
     
@@ -42,14 +29,23 @@ module.exports.save = function (receipts, callback) {
         if (!receipt._id) {
             // Do create
             receipt.createdTimestamp = Date.now();
-            insert(receipt, cb);
+            
+            return new Receipt(receipt).save(function (err, result) {
+                // TODO result 로 뒤집어 써야 한다.
+                result.temporary = receipt.temporary;
+                results.push(result);
+                cb();
+            });
         } else {
             // Do update
             receipt.modifiedTimestamp = Date.now();
-            update(receipt, cb);
+            
+            return Receipt.update({ '_id' : receipt._id }, receipt, function (err, result) {
+                result.temporary = receipt.temporary;
+                results.push(result);
+                cb();
+            });
         }
-        
-        results.push(receipt);
         
     }, function (err) {
         callback(err, results);
