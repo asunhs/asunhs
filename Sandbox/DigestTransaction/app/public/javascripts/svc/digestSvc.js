@@ -3,7 +3,7 @@
     
     
     angular.module('DutchPayApp')
-    .service('DigestSvc', function ($http, Receipts) {
+    .service('DigestSvc', function ($http, Receipts, ReceiptsSvc) {
         
         var svc = this,
             DIGEST = 'Digest',
@@ -19,7 +19,7 @@
             return mode;
         };
         
-        function cleanNotRegistedReceipts () {
+        function cleanNotRegistedReceipts() {
             
             // clean
             _.chain(Receipts).filter(function (receipt) {
@@ -64,10 +64,20 @@
         
         this.digest = function () {
             
-            $http.post('/receipts/digest', _.filter(Receipts, function (receipt) {
+            var targets = _.filter(Receipts, function (receipt) {
                 return receipt.isSelected;
-            })).success(function (receipts) {
-                console.log(receipts);
+            });
+            
+            cleanNotRegistedReceipts();
+            
+            $http.post('/receipts/digest', targets).success(function (res) {
+                if (res.receipts) {
+                    ReceiptsSvc.adjustReceipts(res.receipts);
+                }
+                
+                if (res.digest) {
+                    console.log(res.digest);
+                }
             });
         };
         

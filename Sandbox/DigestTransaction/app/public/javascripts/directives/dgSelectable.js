@@ -11,14 +11,18 @@
             link : function (scope, element, attrs) {
                 
                 element.on('click', function () {
+                        
+                    var receipt = scope.dgSelectable;
                     
                     if (DigestSvc.getMode() != DigestSvc.modes.DIGEST) {
                         return;
                     }
+
+                    if (receipt.digestId) {
+                        return;
+                    }
                     
                     scope.$apply(function() {
-                        
-                        var receipt = scope.dgSelectable;
                     
                         if (receipt.isSelected) {
                             delete receipt.isSelected;
