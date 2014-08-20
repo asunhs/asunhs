@@ -21,7 +21,7 @@
             
             // clean
             _.chain(Receipts).filter(function (receipt) {
-                return !receipt.receiptId;
+                return !receipt._id;
             }).each(function (receipt) {
                 Receipts.splice(Receipts.indexOf(receipt), 1);
             });

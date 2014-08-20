@@ -27,9 +27,9 @@
                 });
             }
             
-            if (condition.receiptId) {
+            if (condition._id) {
                 return _.find(Receipts, function (receipt) {
-                    return receipt.receiptId === condition.receiptId;
+                    return receipt._id === condition._id;
                 });
             }
             
@@ -42,7 +42,7 @@
             
             delete receipt.temporary;
             
-            if (!existed && !receipt.receiptId) {
+            if (!existed && !receipt._id) {
                 return;
             }
             
@@ -54,7 +54,7 @@
             
             delete existed.temporary;
             
-            if (!receipt.receiptId) {
+            if (!receipt._id) {
                 // Delete
                 Receipts.splice(Receipts.indexOf(existed), 1);
                 return;

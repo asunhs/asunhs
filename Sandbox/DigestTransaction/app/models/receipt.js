@@ -4,7 +4,6 @@ var mongoose = require('mongoose'),
 
 var ReceiptSchema = new Schema({
     to : String,
-    receiptId : Number,
     title : String,
     transactions : [{
         from : String,

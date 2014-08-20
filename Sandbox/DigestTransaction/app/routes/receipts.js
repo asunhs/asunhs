@@ -38,7 +38,7 @@ router.post('/save', function (req, res) {
 router.post('/remove', function (req, res) {
     
     var receipts = _.filter(req.body, function (receipt) {
-        return !!receipt.temporary && !! receipt.receiptId;
+        return !!receipt.temporary && !!receipt._id;
     });
     
     db.receipts.remove(receipts, function (err, receipts) {

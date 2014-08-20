@@ -20,23 +20,16 @@ module.exports.find = function (conditions, cb) {
 
 
 function insert (receipt, cb) {
-    
-    return db.counters.seq('receiptId', function (err, counter) {
-
-        if (!!err) {
-            return cb(err);
-        }
-
-        receipt.receiptId = counter.seq;
-
-        return new Receipt(receipt).save(cb);
-    });
-    
+    return new Receipt(receipt).save(function (err, result) {
+        // TODO result 로 뒤집어 써야 한다.
+        receipt._id = result._id;
+        cb();
+    });    
 }
 
 
 function update (receipt, cb) {
-    return Receipt.update({ receiptId : receipt.receiptId }, receipt, cb);
+    return Receipt.update({ '_id' : receipt._id }, receipt, cb);
 }
 
 
@@ -46,7 +39,7 @@ module.exports.save = function (receipts, callback) {
     
     async.each(receipts, function (receipt, cb) {
         
-        if (!receipt.receiptId) {
+        if (!receipt._id) {
             // Do create
             receipt.createdTimestamp = Date.now();
             insert(receipt, cb);
@@ -71,7 +64,7 @@ module.exports.remove = function (receipts, callback) {
     
     async.each(receipts, function (receipt, cb) {
         
-        if (!!receipt.receiptId) {
+        if (!!receipt._id) {
             // Do remove
             receipt.removedTimestamp = Date.now();
             update(receipt, cb);
