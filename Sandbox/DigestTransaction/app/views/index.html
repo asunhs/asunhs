@@ -9,17 +9,20 @@
     <script src="./javascripts/dutchpayapp.js"></script>
     <script src="./javascripts/ctrl/mainCtrl.js"></script>
     <script src="./javascripts/svc/receiptsSvc.js"></script>
+    <script src="./javascripts/svc/digestSvc.js"></script>
     <script src="./javascripts/model/receipts.js"></script>
+    <script src="./javascripts/directives/dgSelectable.js"></script>
 </head>
 <body ng-app="DutchPayApp">
     <div ng-controller="MainCtrl">
         <h1>{{welcome}}</h1>
         <div class="container">
+            <div ng-click="toggleDigestMode()">Digest</div>
             <ul class="receipts">
-                <li ng-click="addReceipt(receipts)">+ New Receipt</li>
-                <li ng-repeat="receipt in receipts | orderBy:'createdTimestamp':true">
+                <li ng-if="addable()" ng-click="addReceipt(receipts)">+ New Receipt</li>
+                <li ng-class="{ 'dg-selected' : receipt.isSelected }" ng-repeat="receipt in receipts | orderBy:'createdTimestamp':true" dg-selectable="receipt">
                     <div ng-if="!isWriting(receipt)">
-                        <h3>{{receipt.title}}</h3><span style="float:right;" ng-click="removeReceipts([receipt])">remove</span>
+                        <h3>{{receipt.title}}</h3><span style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
                         Owner {{receipt.to}}
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">
@@ -29,7 +32,7 @@
                         </ul>
                     </div>
                     <div ng-if="isWriting(receipt)">
-                        <h3><input type="text" ng-model="receipt.title" /></h3><span style="float:right;" ng-click="saveReceipts([receipt])">save</span>
+                        <h3><input type="text" ng-model="receipt.title" /></h3><span style="float:right;" ng-click="saveReceipts([receipt])">Save</span>
                         Owner <input type="text" ng-model="receipt.to" />
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">

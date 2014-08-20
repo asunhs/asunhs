@@ -2,7 +2,7 @@
     'use strict';
     
     angular.module('DutchPayApp')
-    .controller('MainCtrl', function ($scope, ReceiptsSvc, Receipts) {
+    .controller('MainCtrl', function ($scope, DigestSvc, ReceiptsSvc, Receipts) {
         
         var isWriting = $scope.isWriting = function (receipt) {
             return receipt.status === 'writing';
@@ -27,6 +27,10 @@
             receipt.transactions.push({});
         };
         
+        $scope.addable = function () {
+            return DigestSvc.getMode() === DigestSvc.BOOK;
+        };
+        
         $scope.addReceipt = function (receipts) {
             
             if (!receipts) {
@@ -39,5 +43,9 @@
         $scope.saveReceipts = ReceiptsSvc.saveReceipts;
         
         $scope.removeReceipts = ReceiptsSvc.removeReceipts;
+        
+        $scope.toggleDigestMode = function () {
+            DigestSvc.toggle();
+        };
     });
 }());

@@ -18,6 +18,11 @@ ul.receipts > li:last-child {
     margin-bottom: 0px;
 }
 
+ul.receipts > li.dg-selected {
+    padding: 7px;
+    border: 3px solid #ff8888;
+}
+
 ul.receipt {
     list-style:none;
     padding: 9px;
