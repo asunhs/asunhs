@@ -23,7 +23,7 @@
                 <li ng-if="confirmMode(modes.DIGEST)" ng-click="digest()">Digest</li>
                 <li ng-class="{ 'dg-selected' : receipt.isSelected, 'dg-digested' : receipt.digestId }" ng-repeat="receipt in receipts | orderBy:'createdTimestamp':true" dg-selectable="receipt">
                     <div ng-if="!isWriting(receipt)">
-                        <h3>{{receipt.title}}</h3><span style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
+                        <h3>{{receipt.title}}</h3><span ng-if="!receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
                         Owner {{receipt.to}}
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">

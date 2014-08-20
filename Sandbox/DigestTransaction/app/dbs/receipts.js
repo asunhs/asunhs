@@ -77,7 +77,7 @@ module.exports.remove = function (receipts, callback) {
             
             Receipt.findById(receipt._id, function (err, doc) {
                 if (!!doc.digestId) {
-                    cb(new Error('already digested'));
+                    return cb(new Error('already digested'));
                 }
                 
                 doc.removedTimestamp = Date.now();
