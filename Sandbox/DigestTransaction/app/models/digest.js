@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
     
 
 var DigestSchema = new Schema({
+    type : String,
     receipts: [Schema.ObjectId],
     transactions : [{
         to : String,

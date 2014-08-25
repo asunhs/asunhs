@@ -1,5 +1,5 @@
 (function () {
     'use strict';
     
-    angular.module('DutchPayApp').value('Receipts', []).value('Digests', []);
+    angular.module('DutchPayApp').value('Receipts', []);
 }());

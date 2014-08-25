@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
     
 
 var ReceiptSchema = new Schema({
+    type : String,
     to : String,
     title : String,
     transactions : [{

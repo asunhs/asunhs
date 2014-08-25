@@ -8,13 +8,22 @@ var digest = require('../services/digest');
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-    db.receipts.find(null, function (err, receipts) {
+    async.parallel([
+        function (cb) {
+            db.receipts.find(null, cb);
+        },
+        function (cb) {
+            db.digests.find(null, cb);
+        },
+    ], function (err, results) {
+        
         if (!!err) {
             return res.send(err);
         }
-        
-        return res.send(receipts);
+
+        return res.send(_.union.apply(_, results));
     });
+    
 });
 
 router.post('/save', function (req, res) {
@@ -22,7 +31,8 @@ router.post('/save', function (req, res) {
     var receipts = _.chain(req.body).filter(function (receipt) {
             return !!receipt.temporary;
         }).map(function (receipt) {
-            return _.extend(receipt, { 
+            return _.extend(receipt, {
+                type : 'receipt',
                 status : 'yet',
                 transactions : _.filter(receipt.transactions, function (transaction) {
                     return transaction.from && transaction.amount && transaction.amount > 0;
@@ -43,9 +53,7 @@ router.post('/remove', function (req, res) {
     });
     
     db.receipts.remove(receipts, function (err, receipts) {
-        res.send(_.map(receipts, function (receipt) {
-            return _.pick(receipt, 'temporary');
-        }));
+        res.send(receipts);
     });
 });
 
@@ -93,6 +101,7 @@ router.post('/digest', function (req, res) {
         },
         function (receipts, transactions, cb) {
             db.digests.save([{
+                type : 'digest',
                 receipts : _.map(receipts, function (receipt) {
                     return receipt._id;
                 }),
@@ -105,10 +114,7 @@ router.post('/digest', function (req, res) {
                     receipt.digestId = digest._id;
                     receipt.save(cb);
                 }, function (err) {
-                    res.send({
-                        receipts : receipts,
-                        digest : digest
-                    });
+                    res.send(_.union(receipts, digests));
                 });
             });
         }

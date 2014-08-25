@@ -10,6 +10,7 @@
     <script src="./javascripts/ctrl/mainCtrl.js"></script>
     <script src="./javascripts/svc/receiptsSvc.js"></script>
     <script src="./javascripts/svc/digestSvc.js"></script>
+    <script src="./javascripts/model/pools.js"></script>
     <script src="./javascripts/model/receipts.js"></script>
     <script src="./javascripts/directives/dgSelectable.js"></script>
 </head>
@@ -21,26 +22,47 @@
             <ul class="receipts">
                 <li ng-if="confirmMode(modes.BOOK)" ng-click="addReceipt(receipts)">+ New Receipt</li>
                 <li ng-if="confirmMode(modes.DIGEST)" ng-click="digest()">Digest</li>
-                <li ng-class="{ 'dg-selected' : receipt.isSelected, 'dg-digested' : receipt.digestId }" ng-repeat="receipt in receipts | orderBy:'createdTimestamp':true" dg-selectable="receipt">
-                    <div ng-if="!isWriting(receipt)">
-                        <h3>{{receipt.title}}</h3><span ng-if="!receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
-                        Owner {{receipt.to}}
-                        <ul class="receipt">
-                            <li ng-repeat="transaction in receipt.transactions">
-                                {{transaction.from}} : {{transaction.amount}}
-                            </li>
-                            <li ng-if="isWriting(receipt)" ng-click="addTransaction()">+ New Row</li>
-                        </ul>
+                <li ng-if="!receipt.removedTimestamp"
+                    ng-class="{ 'dg-selected' : receipt.isSelected, 'dg-digested' : receipt.digestId }"
+                    ng-repeat="receipt in receipts | orderBy:'createdTimestamp':true"
+                    dg-selectable="receipt" >
+                    
+                    <div ng-if="receipt.type === 'receipt'">
+                        
+                        <div ng-if="!isWriting(receipt)">
+                            <h3>{{receipt.title}}</h3><span ng-if="!receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
+                            To. {{receipt.to}}
+                            <ul class="receipt">
+                                <li ng-repeat="transaction in receipt.transactions">
+                                    {{transaction.from}} : {{transaction.amount}}
+                                </li>
+                                <li ng-if="isWriting(receipt)" ng-click="addTransaction()">+ New Row</li>
+                            </ul>
+                        </div>
+                        
+                        <div ng-if="isWriting(receipt)">
+                            <h3><input type="text" ng-model="receipt.title" /></h3><span style="float:right;" ng-click="saveReceipts([receipt])">Save</span>
+                            To. <input type="text" ng-model="receipt.to" />
+                            <ul class="receipt">
+                                <li ng-repeat="transaction in receipt.transactions">
+                                    <input type="text" ng-model="transaction.from" /> : <input type="number" ng-model="transaction.amount" />
+                                </li>
+                                <li ng-click="addTransaction(receipt)">+ New Row</li>
+                            </ul>
+                        </div>
+                        
                     </div>
-                    <div ng-if="isWriting(receipt)">
-                        <h3><input type="text" ng-model="receipt.title" /></h3><span style="float:right;" ng-click="saveReceipts([receipt])">Save</span>
-                        Owner <input type="text" ng-model="receipt.to" />
+                    
+                    
+                    <div ng-if="receipt.type === 'digest'">
+                        
+                        <h3>Digest</h3>
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">
-                                <input type="text" ng-model="transaction.from" /> : <input type="number" ng-model="transaction.amount" />
+                                {{transaction.from}} -> {{transaction.to}} : {{transaction.amount}}
                             </li>
-                            <li ng-click="addTransaction(receipt)">+ New Row</li>
                         </ul>
+                        
                     </div>
                 </li>
             </ul>

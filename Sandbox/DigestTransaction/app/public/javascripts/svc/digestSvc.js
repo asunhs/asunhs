@@ -70,14 +70,8 @@
             
             cleanNotRegistedReceipts();
             
-            $http.post('/receipts/digest', targets).success(function (res) {
-                if (res.receipts) {
-                    ReceiptsSvc.adjustReceipts(res.receipts);
-                }
-                
-                if (res.digest) {
-                    console.log(res.digest);
-                }
+            $http.post('/receipts/digest', targets).success(function (receipts) {
+                ReceiptsSvc.adjustReceipts(receipts);
             });
         };
         

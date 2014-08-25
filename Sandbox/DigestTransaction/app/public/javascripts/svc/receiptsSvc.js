@@ -2,67 +2,39 @@
     'use strict';
     
     angular.module('DutchPayApp')
-    .service('ReceiptsSvc', function ($http, Receipts) {
+    .service('ReceiptsSvc', function ($http, Temporary, Pool, Receipts) {
         
-        var svc = this,
-            uuid = function() {
-                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-                    return v.toString(16);
-                });
-            };
+        var svc = this;
         
         this.newReceipt = function (receipt) {
             return _.extend({
+                type : 'receipt',
                 status : 'writing'
             }, receipt);
             
         };
         
-        this.getReceipt = function (condition) {
-            
-            if (condition.temporary) {
-                return _.find(Receipts, function (receipt) {
-                    return receipt.temporary === condition.temporary;
-                });
-            }
-            
-            if (condition._id) {
-                return _.find(Receipts, function (receipt) {
-                    return receipt._id === condition._id;
-                });
-            }
-            
-            return;
-        };
-        
         this.adjustReceipt = function (receipt) {
             
-            var existed = svc.getReceipt(receipt);
-            
-            delete receipt.temporary;
-            
-            if (!existed && !receipt._id) {
-                return;
-            }
-            
-            if (!existed) {
-                // Create
-                Receipts.push(receipt);
-                return;
-            }
-            
-            delete existed.temporary;
-            
             if (!receipt._id) {
-                // Delete
-                Receipts.splice(Receipts.indexOf(existed), 1);
                 return;
+            }
+            
+            if (receipt.temporary) {
+                var temp = Temporary.pop(receipt.temporary);
+                
+                if (!temp._id) {
+                    receipt = _.extend(temp, receipt);
+                }
             }
             
             // Update
-            _.extend(existed, receipt);
+            var stocked = Pool.set(receipt);
             
+            if (!_.contains(Receipts, stocked)) {
+                console.log('pushed because ', !_.contains(Receipts, stocked)); 
+                Receipts.push(stocked);
+            }
         };
         
         
@@ -73,20 +45,18 @@
         
         this.saveReceipts = function (receipts) {
             
-            $http.post('/receipts/save', _.map(receipts, function (receipt) {
-                receipt.temporary = uuid();
-                return receipt;
-            })).success(svc.adjustReceipts);
+            _.each(receipts, Temporary.set);
+            
+            $http.post('/receipts/save', receipts).success(svc.adjustReceipts);
             
         };
         
         
         this.removeReceipts = function (receipts) {
             
-            $http.post('/receipts/remove', _.map(receipts, function (receipt) {
-                receipt.temporary = uuid();
-                return receipt;
-            })).success(svc.adjustReceipts);
+            _.each(receipts, Temporary.set);
+            
+            $http.post('/receipts/remove', receipts).success(svc.adjustReceipts);
             
         };
         

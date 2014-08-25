@@ -23,6 +23,10 @@ ul.receipts > li.dg-selected {
     border: 3px solid #ff8888;
 }
 
+ul.receipts > li.dg-removed {
+    background-color: #ddddff;
+}
+
 ul.receipts > li.dg-digested {
     background-color: #dddddd;
 }
