@@ -13,6 +13,7 @@
     <script src="./javascripts/model/pools.js"></script>
     <script src="./javascripts/model/receipts.js"></script>
     <script src="./javascripts/directives/dgSelectable.js"></script>
+    <script src="./javascripts/filters/receiptFilter.js"></script>
 </head>
 <body ng-app="DutchPayApp">
     <div ng-controller="MainCtrl">
@@ -31,7 +32,7 @@
                         
                         <div ng-if="!isWriting(receipt)">
                             <h3>{{receipt.title}}</h3><span ng-if="!receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
-                            To. {{receipt.to}}
+                            <div>To. {{receipt.to}}</div>
                             <ul class="receipt">
                                 <li ng-repeat="transaction in receipt.transactions">
                                     {{transaction.from}} : {{transaction.amount}}
@@ -57,6 +58,7 @@
                     <div ng-if="receipt.type === 'digest'">
                         
                         <h3>Digest</h3>
+                        <div ng-repeat="receiptId in receipt.receipts">{{receiptId | receipt}}</div>
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">
                                 {{transaction.from}} -> {{transaction.to}} : {{transaction.amount}}
