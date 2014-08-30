@@ -4,10 +4,12 @@ var mongoose = require('mongoose'),
 
 var ReceiptSchema = new Schema({
     type : String,
-    to : String,
+    owner : String,
     title : String,
+    receipts: [Schema.ObjectId],
     transactions : [{
         from : String,
+        to : String,
         amount : Number
     }],
     createdTimestamp : Number,

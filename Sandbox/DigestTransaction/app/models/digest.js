@@ -13,6 +13,7 @@ var DigestSchema = new Schema({
     createdTimestamp : Number,
     modifiedTimestamp : Number,
     removedTimestamp : Number,
+    digestId : Schema.ObjectId,
     status : String
 });
 
