@@ -7,11 +7,7 @@
         var svc = this;
         
         this.newReceipt = function (receipt) {
-            return _.extend({
-                type : 'receipt',
-                status : 'writing'
-            }, receipt);
-            
+            return receipt || {};
         };
         
         this.adjustReceipt = function (receipt) {

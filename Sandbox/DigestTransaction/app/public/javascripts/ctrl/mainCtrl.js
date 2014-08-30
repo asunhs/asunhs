@@ -4,10 +4,6 @@
     angular.module('DutchPayApp')
     .controller('MainCtrl', function ($scope, DigestSvc, ReceiptsSvc, Receipts) {
         
-        var isWriting = $scope.isWriting = function (receipt) {
-            return receipt.status === 'writing';
-        }
-        
         ReceiptsSvc.pullReceipts();
         
         $scope.welcome = "Welcome!";
@@ -50,7 +46,7 @@
         
         $scope.addTransaction = function (receipt) {
             
-            if (!isWriting(receipt)) {
+            if (!!receipt.createdTimestamp) {
                 return;
             }
             

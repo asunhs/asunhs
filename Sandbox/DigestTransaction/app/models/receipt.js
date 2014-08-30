@@ -3,7 +3,6 @@ var mongoose = require('mongoose'),
     
 
 var ReceiptSchema = new Schema({
-    type : String,
     owner : String,
     title : String,
     receipts: [Schema.ObjectId],
@@ -15,8 +14,7 @@ var ReceiptSchema = new Schema({
     createdTimestamp : Number,
     modifiedTimestamp : Number,
     removedTimestamp : Number,
-    digestId : Schema.ObjectId,
-    status : String
+    digestId : Schema.ObjectId
 });
 
 

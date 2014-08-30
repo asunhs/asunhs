@@ -82,15 +82,16 @@ router.post('/digest', function (req, res) {
             var transactions = _.chain(receipts).map(function (receipt) {
                 return _.map(receipt.transactions, function (transaction) {
                     return {
-                        to : receipt.to,
+                        to : receipt.owner || transaction.to,
                         from : transaction.from,
                         amount : transaction.amount
                     };
                 });
             }).flatten().value();
-        
-            db.digests.save([{
-                type : 'digest',
+            
+            
+            db.receipts.save([{
+                title : 'Digest "' + _.min(receipts, function (receipt) { return receipt.title.length; }).title + ((receipts.length > 1) ? '" and ' + (receipts.length - 1) + ' more' : ''),
                 receipts : _.pluck(receipts, '_id'),
                 transactions : digest.getMethods(digest.summarize(transactions))
             }], function (err, digests) {

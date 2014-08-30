@@ -28,43 +28,35 @@
                     ng-repeat="receipt in receipts | orderBy:'createdTimestamp':true"
                     dg-selectable="receipt" >
                     
-                    <div ng-if="receipt.type === 'receipt'">
+                    <div ng-if="!!receipt.owner && !!receipt.createdTimestamp">
+                        <h3>{{receipt.title}}</h3><span ng-if="!receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
+                        <div>To. {{receipt.owner}}</div>
+                        <ul class="receipt">
+                            <li ng-repeat="transaction in receipt.transactions">
+                                {{transaction.from}} : {{transaction.amount}}
+                            </li>
+                        </ul>
+                    </div>
                         
-                        <div ng-if="!isWriting(receipt)">
-                            <h3>{{receipt.title}}</h3><span ng-if="!receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
-                            <div>To. {{receipt.to}}</div>
-                            <ul class="receipt">
-                                <li ng-repeat="transaction in receipt.transactions">
-                                    {{transaction.from}} : {{transaction.amount}}
-                                </li>
-                                <li ng-if="isWriting(receipt)" ng-click="addTransaction()">+ New Row</li>
-                            </ul>
-                        </div>
-                        
-                        <div ng-if="isWriting(receipt)">
-                            <h3><input type="text" ng-model="receipt.title" /></h3><span style="float:right;" ng-click="saveReceipts([receipt])">Save</span>
-                            To. <input type="text" ng-model="receipt.to" />
-                            <ul class="receipt">
-                                <li ng-repeat="transaction in receipt.transactions">
-                                    <input type="text" ng-model="transaction.from" /> : <input type="number" ng-model="transaction.amount" />
-                                </li>
-                                <li ng-click="addTransaction(receipt)">+ New Row</li>
-                            </ul>
-                        </div>
-                        
+                    <div ng-if="!receipt.createdTimestamp">
+                        <h3><input type="text" ng-model="receipt.title" /></h3><span style="float:right;" ng-click="saveReceipts([receipt])">Save</span>
+                        To. <input type="text" ng-model="receipt.owner" />
+                        <ul class="receipt">
+                            <li ng-click="addTransaction(receipt)">+ New Row</li>
+                            <li ng-repeat="transaction in receipt.transactions">
+                                <input type="text" ng-model="transaction.from" /> : <input type="number" ng-model="transaction.amount" />
+                            </li>
+                        </ul>
                     </div>
                     
-                    
-                    <div ng-if="receipt.type === 'digest'">
-                        
-                        <h3>Digest</h3>
+                    <div ng-if="!receipt.owner && !!receipt.createdTimestamp">
+                        <h3>{{receipt.title}}</h3>
                         <div ng-repeat="receiptId in receipt.receipts">{{receiptId | receipt}}</div>
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">
                                 {{transaction.from}} -> {{transaction.to}} : {{transaction.amount}}
                             </li>
                         </ul>
-                        
                     </div>
                 </li>
             </ul>
