@@ -40,24 +40,11 @@ router.post('/save', function (req, res) {
     
 });
 
-router.post('/remove', function (req, res) {
-    
-    var receipts = _.filter(req.body, function (receipt) {
-        return !!receipt.temporary && !!receipt._id;
-    });
-    
-    db.receipts.remove(receipts, function (err, receipts) {
-        res.send(receipts);
-    });
-});
-
 router.post('/digest', function (req, res) {
     
     async.waterfall([
         function (cb) {
-            var receiptIds = _.chain(req.body).filter(function (receipt) {
-                return !!receipt._id;
-            }).pluck('_id').value();
+            var receiptIds = _.chain(req.body).pluck('_id').compact().value();
             
             if (_.isEmpty(receiptIds)) {
                 return cb(new Error('non seleted'));
@@ -109,6 +96,55 @@ router.post('/digest', function (req, res) {
         } else {
             res.send(results);
         }
+    });
+    
+});
+
+router.post('/remove', function (req, res) {
+    
+    async.waterfall([
+        function (cb) {
+            var receipts = _.filter(req.body, function (receipt) {
+                return !!receipt.temporary && !!receipt._id;
+            });
+
+            if (_.isEmpty(receipts)) {
+                return cb(new Error('non seleted'));
+            }
+            
+            db.receipts.findByIds(_.pluck(receipts, '_id'), cb);
+        },
+        function (receipts, cb) {
+            
+            async.series([
+                function (cb) {
+                   db.receipts.remove(receipts, cb); 
+                },
+                function (cb) {
+                    var revokeds = _.flatten(_.pluck(receipts, 'receipts'));
+                    
+                    db.receipts.findByIds(revokeds, function (err, docs) {
+                        
+                        async.each(docs, function (doc, cb) {
+                            doc.digestId = null;
+                            doc.save(cb);
+                        }, function (err) {
+                            cb(null, docs);
+                        });
+                        
+                    });
+                }
+            ], function (err, results) {
+                if (err) {
+                    return cb(err);
+                }
+                
+                cb(null, _.flatten(results));
+            });
+            
+        }
+    ], function (err, receipts) {
+        res.send(receipts);
     });
     
 });

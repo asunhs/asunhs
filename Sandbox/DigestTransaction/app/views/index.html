@@ -29,7 +29,7 @@
                     dg-selectable="receipt" >
                     
                     <div ng-if="!!receipt.owner && !!receipt.createdTimestamp">
-                        <h3>{{receipt.title}}</h3><span ng-if="!receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
+                        <h3>{{receipt.title}}</h3><span ng-if="confirmMode(modes.BOOK) && !receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
                         <div>To. {{receipt.owner}}</div>
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">
@@ -50,7 +50,7 @@
                     </div>
                     
                     <div ng-if="!receipt.owner && !!receipt.createdTimestamp">
-                        <h3>{{receipt.title}}</h3>
+                        <h3>{{receipt.title}}</h3><span ng-if="confirmMode(modes.BOOK) && !receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Revoke</span>
                         <div ng-repeat="receiptId in receipt.receipts">{{receiptId | receipt}}</div>
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">
