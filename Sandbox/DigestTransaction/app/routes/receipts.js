@@ -8,20 +8,14 @@ var digest = require('../services/digest');
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-    async.parallel([
-        function (cb) {
-            db.receipts.find(null, cb);
-        },
-        function (cb) {
-            db.digests.find(null, cb);
-        },
-    ], function (err, results) {
+    
+    db.receipts.find(null, function (err, receipts) {
         
         if (!!err) {
             return res.send(err);
         }
 
-        return res.send(_.union.apply(_, results));
+        return res.send(receipts);
     });
     
 });

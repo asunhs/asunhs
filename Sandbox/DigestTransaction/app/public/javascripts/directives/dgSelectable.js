@@ -1,7 +1,7 @@
 (function () {
     'use strict';
     
-    angular.module('DutchPayApp').directive('dgSelectable', function (DigestSvc) {
+    angular.module('DutchPayApp').directive('dgSelectable', function (ModeSvc) {
         
         return {
             restrict : 'A',
@@ -14,7 +14,7 @@
                         
                     var receipt = scope.dgSelectable;
                     
-                    if (DigestSvc.getMode() != DigestSvc.modes.DIGEST) {
+                    if (ModeSvc.getMode() != ModeSvc.modes.DIGEST) {
                         return;
                     }
 

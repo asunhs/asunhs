@@ -3,7 +3,7 @@
     
     
     angular.module('DutchPayApp')
-    .service('DigestSvc', function ($http, Receipts, ReceiptsSvc) {
+    .service('ModeSvc', function ($http, Receipts, ReceiptsSvc) {
         
         var svc = this,
             DIGEST = 'Digest',

@@ -2,7 +2,7 @@
     'use strict';
     
     angular.module('DutchPayApp')
-    .controller('MainCtrl', function ($scope, DigestSvc, ReceiptsSvc, Receipts) {
+    .controller('MainCtrl', function ($scope, ModeSvc, ReceiptsSvc, Receipts) {
         
         ReceiptsSvc.pullReceipts();
         
@@ -10,11 +10,11 @@
         
         $scope.receipts = Receipts;
         
-        $scope.modes = DigestSvc.modes;
+        $scope.modes = ModeSvc.modes;
         
-        $scope.getMode = DigestSvc.getMode;
+        $scope.getMode = ModeSvc.getMode;
         
-        $scope.digest = DigestSvc.digest;
+        $scope.digest = ModeSvc.digest;
         
         $scope.saveReceipts = ReceiptsSvc.saveReceipts;
         
@@ -33,11 +33,11 @@
         };
         
         $scope.toggleDigestMode = function () {
-            DigestSvc.toggle();
+            ModeSvc.toggle();
         };
         
         $scope.confirmMode = function (mode) {
-            return DigestSvc.getMode() === mode;
+            return ModeSvc.getMode() === mode;
         };
         
         

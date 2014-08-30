@@ -28,7 +28,6 @@
             var stocked = Pool.set(receipt);
             
             if (!_.contains(Receipts, stocked)) {
-                console.log('pushed because ', !_.contains(Receipts, stocked)); 
                 Receipts.push(stocked);
             }
         };
