@@ -5,14 +5,11 @@
         
         return {
             restrict : 'A',
-            scope : {
-                dgSelectable : '='
-            },
             link : function (scope, element, attrs) {
                 
                 element.on('click', function () {
                         
-                    var receipt = scope.dgSelectable;
+                    var receipt = scope.receipt;
                     
                     if (ModeSvc.getMode() != ModeSvc.modes.DIGEST) {
                         return;
@@ -32,7 +29,7 @@
                         
                     });
                     
-                })
+                });
             }
         };
     });
