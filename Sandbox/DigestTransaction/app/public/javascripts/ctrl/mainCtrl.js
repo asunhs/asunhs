@@ -20,6 +20,12 @@
         
         $scope.removeReceipts = ReceiptsSvc.removeReceipts;
         
+        $scope.getTotal = function (receipt) {
+            return _.chain(receipt.transactions).pluck('amount').compact().reduce(function (sum, amount) {
+                return sum + amount;
+            }, 0).value();
+        };
+        
         
         
         

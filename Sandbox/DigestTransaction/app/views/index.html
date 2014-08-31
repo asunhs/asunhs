@@ -32,7 +32,7 @@
                     <div ng-if="!!receipt.owner && !!receipt.createdTimestamp">
                         <span ng-if="confirmMode(modes.BOOK) && !receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
                         <h3>{{receipt.title}}</h3>
-                        <span style="float:right;" >Total : {{receipt.total}}</span>
+                        <span style="float:right;" >Total : {{getTotal(receipt)}}</span>
                         <div>To. {{receipt.owner}}</div>
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">
@@ -57,7 +57,7 @@
                     <div ng-if="!receipt.owner && !!receipt.createdTimestamp">
                         <span ng-if="confirmMode(modes.BOOK) && !receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Revoke</span>
                         <h3>{{receipt.title}}</h3>
-                        <span style="float:right;" >Total : {{receipt.total}}</span>
+                        <span style="float:right;" >Total : {{getTotal(receipt}}</span>
                         <div ng-repeat="receiptId in receipt.receipts">{{receiptId | receipt}}</div>
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">
