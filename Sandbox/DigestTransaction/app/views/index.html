@@ -20,8 +20,8 @@
     <div ng-controller="MainCtrl">
         <h1>{{welcome}}</h1>
         <div class="container">
-            <div ng-click="toggleDigestMode()">{{getMode()}} Mode</div>
             <ul class="receipts">
+                <li ng-click="toggleDigestMode()">{{getMode()}} Mode</li>
                 <li ng-if="confirmMode(modes.BOOK)" ng-click="addReceipt(receipts)">+ New Receipt</li>
                 <li ng-if="confirmMode(modes.DIGEST)" ng-click="digest()">Digest</li>
                 <li ng-if="!receipt.removedTimestamp"
@@ -30,7 +30,7 @@
                     dg-selectable >
                     
                     <div ng-if="!!receipt.owner && !!receipt.createdTimestamp">
-                        <span ng-if="confirmMode(modes.BOOK) && !receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
+                        <span class="button" ng-if="confirmMode(modes.BOOK) && !receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Remove</span>
                         <h3>{{receipt.title}}</h3>
                         <span style="float:right;" >Total : {{getTotal(receipt)}}</span>
                         <div>To. {{receipt.owner}}</div>
@@ -42,22 +42,22 @@
                     </div>
                         
                     <div ng-if="!receipt.createdTimestamp" dg-receipt >
-                        <span style="float:right;" ng-click="saveReceipts([receipt])">Save</span>
+                        <span class="button" style="float:right;" ng-click="saveReceipts([receipt])">Save</span>
                         <h3><input type="text" ng-model="receipt.title" placeholder="Title" /></h3>
-                        <span style="float:right;" >Total : <input type="text" ng-model="receipt.total" /></span>
+                        <span style="float:right;" >Total : <input type="number" ng-model="receipt.total" /></span>
                         To. <input type="text" ng-model="receipt.owner" placeholder="Owner" />
                         <ul class="receipt">
                             <li ng-click="addTransaction(receipt)">+ New Row</li>
                             <li ng-repeat="transaction in receipt.transactions" dg-transaction >
-                                <input type="text" ng-model="transaction.from" /> : <input type="number" ng-model="transaction.amount" />
+                                <input type="text" ng-model="transaction.from" placeholder="from" /> : <input type="number" ng-model="transaction.amount" placeholder="amount" />
                             </li>
                         </ul>
                     </div>
                     
                     <div ng-if="!receipt.owner && !!receipt.createdTimestamp">
-                        <span ng-if="confirmMode(modes.BOOK) && !receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Revoke</span>
+                        <span class="button" ng-if="confirmMode(modes.BOOK) && !receipt.digestId" style="float:right;" ng-click="removeReceipts([receipt])">Revoke</span>
                         <h3>{{receipt.title}}</h3>
-                        <span style="float:right;" >Total : {{getTotal(receipt}}</span>
+                        <span style="float:right;" >Total : {{getTotal(receipt)}}</span>
                         <div ng-repeat="receiptId in receipt.receipts">{{receiptId | receipt}}</div>
                         <ul class="receipt">
                             <li ng-repeat="transaction in receipt.transactions">
